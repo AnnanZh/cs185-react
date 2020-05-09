@@ -2,13 +2,13 @@ body {
   width: 100%;
   height: 100%;
   color: #946090;
-  }
+}
 
 
 .nav-bar{
   top: 10px;
   height: 100%;
-  width: 20%;
+  width: 10%;
   float: left;
   overflow: hidden;
   color: #B5ACD1;
@@ -33,3 +33,27 @@ h1{
   color:#9986C2;
   font-family: 'Times New Roman', Times, serif;
 }
+
+.BookEnter{
+  float: left;
+  width: 50%;
+  border: 3px;
+}
+
+.Bookdisplay{
+  float: right;
+  width: 50%;
+  border: 3px;
+}
+
+.display-date{
+  color: pink;
+}
+
+/* .display-name{
+  color: blue;
+}
+
+.display-message{
+  color: pink;
+} */

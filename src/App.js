@@ -35,6 +35,11 @@ export class App extends Component{
     {
       id:4,
       title: 'Videos'
+    },
+
+    {
+      id:5,
+      title: 'Guestbook'
     }
 
     ]
