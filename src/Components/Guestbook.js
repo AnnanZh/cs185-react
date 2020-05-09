@@ -113,7 +113,7 @@ export class Guestbook extends Component {
                 </p>
                 <p>Would you like your information to be viewable by other guests?<br/>
                   <select id='visibility' name='visibility' required onChange={this.myChangeHandler}>
-                    <option value='none'></option>
+                    <option value=''></option>
                     <option value='private'>No</option>
                     <option value='public'>Yes</option>
                   </select>
@@ -146,8 +146,9 @@ export class Guestbook extends Component {
                       return (
                         <div className='private' id={entry.id}>
                           <div>
-                            <span className='name'>{entry.name}</span>
-                            <span className='date'>{entry.date}</span>
+                          <span className='display-date'>{entry.date}</span>
+                            <br></br>
+                            <span className='display-name'>{entry.name}</span>
                           </div>
                           <span className='message'>{entry.msg}</span><br/>
                         </div>
