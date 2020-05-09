@@ -9,7 +9,7 @@ export class Guestbook extends Component {
         name: '',
         desc: '',
         msg: '',
-        visibility: 'private',
+        visibility: '',
         email: '',
         shouldUpdate: false,
         data: [],
@@ -74,7 +74,7 @@ export class Guestbook extends Component {
       } else if (this.state.msg === '') {
         alert("Missing message");
       } else if (this.state.visibility === '') {
-        alert("Missing your choice for visibility");
+        alert("Missing choice for visibility");
       } else {
         let formObj = {
           name: this.state.name, 
@@ -123,7 +123,7 @@ export class Guestbook extends Component {
                 </p>
                 <p>Note: Information with a "*" means it is option to provide.</p>
                 <div>
-                  <input type='submit' id='submit' name='submit' value='Submit'></input>
+                  <input type='submit' id='submit' name='submit' value='Sent Message'></input>
                 </div>
                 </form>
             </div>
