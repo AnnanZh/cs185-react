@@ -8,7 +8,7 @@ export class Experience extends Component{
 			<h2>Software Intern</h2>
 			<img src = {patent} width="250" height="400"></img>
       <br></br>
-			<p2>I am always looking for chances to put what I have learned into practice. 
+			<p>I am always looking for chances to put what I have learned into practice. 
           During the summer of my freshman year, I joined Shanghai STEP Robotics Co., 
           Ltd, a leading robotics public company in China, as a software intern. There, 
           I received training and participated in the design of a control system. 
@@ -19,7 +19,7 @@ export class Experience extends Component{
           corner cases for the robot. What made me especially proud is that our Simulation 
           Control System Device obtained a National Utility Model Patent in China.
           (the photo above is the Patent)    
-      </p2>
+      </p>
     	</div>
     	);
   }

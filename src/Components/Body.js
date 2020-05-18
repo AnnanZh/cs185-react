@@ -4,6 +4,7 @@ import Experience from './Experience'
 import Images from './Images'
 import Videos from './Videos'
 import Guestbook from './Guestbook'
+import Movies from './Movies'
 
 
 
@@ -18,9 +19,10 @@ export class Body extends Component{
 			return <Images/>
 		else if (activeTab==4)
 			return <Videos/>
-		else
+		else if (activeTab==5)
 			return <Guestbook/>
-		
+		else
+			return <Movies/>
 	}
     render(){
 
