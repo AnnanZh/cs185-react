@@ -9,7 +9,7 @@ export class Guestbook extends Component {
         name: '',
         desc: '',
         msg: '',
-        visibility: 'private',
+        visibility: '',
         email: '',
         shouldUpdate: false,
         data: [],
@@ -74,7 +74,7 @@ export class Guestbook extends Component {
       } else if (this.state.msg === '') {
         alert("Missing message");
       } else if (this.state.visibility === '') {
-        alert("Missing your choice for visibility");
+        alert("Missing choice for visibility");
       } else {
         let formObj = {
           name: this.state.name, 
@@ -113,7 +113,7 @@ export class Guestbook extends Component {
                 </p>
                 <p>Would you like your information to be viewable by other guests?<br/>
                   <select id='visibility' name='visibility' required onChange={this.myChangeHandler}>
-                    <option value='none'></option>
+                    <option value=''></option>
                     <option value='private'>No</option>
                     <option value='public'>Yes</option>
                   </select>
@@ -123,7 +123,7 @@ export class Guestbook extends Component {
                 </p>
                 <p>Note: Information with a "*" means it is option to provide.</p>
                 <div>
-                  <input type='submit' id='submit' name='submit' value='Submit'></input>
+                  <input type='submit' id='submit' name='submit' value='Sent Message'></input>
                 </div>
                 </form>
             </div>
@@ -146,8 +146,9 @@ export class Guestbook extends Component {
                       return (
                         <div className='private' id={entry.id}>
                           <div>
-                            <span className='name'>{entry.name}</span>
-                            <span className='date'>{entry.date}</span>
+                          <span className='display-date'>{entry.date}</span>
+                            <br></br>
+                            <span className='display-name'>{entry.name}</span>
                           </div>
                           <span className='message'>{entry.msg}</span><br/>
                         </div>
