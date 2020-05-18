@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 export class Tab extends Component{
 	addStyling = () =>{
-		if(this.props.tab.id == this.props.activeTab){
+		if(this.props.tab.id === this.props.activeTab){
 			return {backgroundColor: "#E3E1EC"}
 		}
 		else{
