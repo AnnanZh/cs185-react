@@ -56,7 +56,7 @@ export class Movie extends Component {
   }
 
   render() {
-    let url = 'http://www.omdbapi.com/?apikey=8d915169&i='+this.props.movie;
+    let url = 'https://www.omdbapi.com/?apikey=8d915169&i='+this.props.movie;
     return(
       <div className='mov-child'>
         {this.getMovieInfo(this, url)}
