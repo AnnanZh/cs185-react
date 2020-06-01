@@ -5,6 +5,8 @@ import Images from './Images'
 import Videos from './Videos'
 import Guestbook from './Guestbook'
 import Movies from './Movies'
+import AddMovie from './AddMovie'
+import AddList from './AddList'
 
 
 
@@ -21,8 +23,12 @@ export class Body extends Component{
 			return <Videos/>
 		else if (activeTab==5)
 			return <Guestbook/>
-		else
+		else if (activeTab==6)
 			return <Movies/>
+		else if (activeTab==7)
+			return <AddMovie/>
+		else
+			return <AddList/>
 	}
     render(){
 
