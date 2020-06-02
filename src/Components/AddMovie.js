@@ -1,79 +1,116 @@
-import React, { Component } from 'react';
-
-
+import React, {useState, useEffect} from 'react';
+import config from './config';
+const axios = require('axios');
 const firebase = require('firebase')
-const axios = require('axios').default;
 
-export class AddMovie extends Component {
+function Movies(props) {
+    const [movies, setMovies] = useState([]);
+    const [lists, setLists] = useState({});
+    const [movieLists, setMovieLists] = useState({});
+    const [curList, setCurList] = useState("All");
+    const [page, setPage] = useState(0);
+    const [newId, setNewId] = useState("");
+    const [newList, setNewList] = useState("");
+    const [search, setSearch] = useState("");
+    const [count, setCount] = useState(0);
+    const [shouldRender, setShowRender] = useState(true);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            MovieIDs: [],
-            AddMovieID: "",
-            loaded: false
-        };
+    useEffect(() => {
+        setCurList("All")
 
-        this.firebase = this.props.firebase;
+        if (!firebase.apps.length) {
+            firebase.initializeApp(config);
+        }
 
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+        let ref = firebase.database().ref('movies').orderByKey();
 
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-
-        this.setState({
-            [name]: value
+        ref.on('child_removed', (childSnapshot, prevChildKey) => {
+            const deletedChild = childSnapshot.val();
+            setMovies(curMovies => curMovies.filter(m => m.imdbID != deletedChild.imdbID));
+            console.log(deletedChild.Title);
         });
-    }
 
-    handleSubmit(event) {
-        event.preventDefault();
+        ref.limitToFirst(8).once('value', (dataSnapshot) => {
+            const val = dataSnapshot.val();
+            if(val != null) {
+                setMovies(Object.values(val));
+                console.log(val);
+            }
+        });
 
-        let id = this.state.AddMovieID;
-        let ref = firebase.database().ref('Movie/' + id);
+        
 
-        axios.get("https://www.omdbapi.com/?apikey=4131ae30&i=" + id)
-            .then(function (response) {
-                const title = response.data.Title;
-                const director = response.data.Director;
-                const rating = response.data.imdbRating;
-                const poster = response.data.Poster;
+        let listRef = firebase.database().ref('lists');
 
-                ref.set({ id, title, director, rating, poster });
-                alert("Added Movie " + title + " to database");
-            }.bind(this))
-            .catch(function (error) {
-                alert("Invalid Movie Id: " + id);
-            })
-            .then(function () {
-                this.setState({
-                    AddMovieID: ""
+        listRef.on('value', (dataSnapshot) => {
+            const val = dataSnapshot.val();
+            setLists(val);
+            if(val != null) {
+                setCount(Object.keys(val["All"]).length - 1);
+            }
+        });
+
+        let movieListsRef = firebase.database().ref('movieLists');
+
+        movieListsRef.on('value', (dataSnapshot) => {
+            const val = dataSnapshot.val();
+            setMovieLists(val);
+        });
+    }, [shouldRender])
+
+    const addMovie = (evt) => {
+        evt.preventDefault();
+        axios({
+            method: 'get',
+            url: "https://www.omdbapi.com/?apikey=8d915169&i=".concat(newId),
+        })
+        .then(
+            (response) => {
+                firebase.database().ref('movies').child(response.data.imdbID).set({
+                    imdbID: response.data.imdbID,
+                    Title: response.data.Title,
+                    Poster: response.data.Poster,
+                    imdbRating: response.data.imdbRating,
+                    Director: response.data.Director,
+                    Released: response.data.Released,
+                    Plot: response.data.Plot
                 });
-            }.bind(this));
+                firebase.database().ref('lists').child("All").child(response.data.imdbID).set(true);
+                firebase.database().ref('movieLists').child(response.data.imdbID).set({
+                    All: true
+                }).then(() => {
+                    setNewId("");
+                    setPage(0);
+                    setShowRender(cur => !cur);
+                });
+            }
+        )
+        .then(
+            alert("Success!")
+        )
+        
     }
 
-
-    render() {
-        return (
-            <div className="inputForm">
-                <form onSubmit={this.handleSubmit}>
-                    <label>
-                        Movie ID to Add :
-                    <input
-                            name="AddMovieID"
-                            type="text"
-                            required="required"
-                            value={this.state.AddMovieID}
-                            onChange={this.handleInputChange} />
-                    </label>
-                    <input type="submit" value="Submit" />
-                </form>
-            </div>
-        );
+    const getPage = () => {
+            return (
+                <div>
+                    <form className="add-movie" onSubmit={addMovie}>
+                        <h2>
+                            Add Movie
+                        </h2>
+                        <label>
+                            Please enter the IMDb ID of the movie:
+                            <input type="text" value={newId} onChange={e => setNewId(e.target.value)}/>
+                        </label>
+                        <input type="submit" value="Add Movie" />
+                    </form>
+                </div>
+            );
     }
+
+    return getPage();
+    
+
 }
-export default AddMovie;
+
+export default Movies;

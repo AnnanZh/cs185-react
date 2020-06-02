@@ -1,61 +1,93 @@
-import React, { Component } from 'react';
+import React, {useState, useEffect} from 'react';
+import config from './config';
+const axios = require('axios');
 const firebase = require('firebase')
 
-export class AddList extends Component {
+function Movies(props) {
+    const [movies, setMovies] = useState([]);
+    const [lists, setLists] = useState({});
+    const [movieLists, setMovieLists] = useState({});
+    const [curList, setCurList] = useState("All");
+    const [page, setPage] = useState(0);
+    const [newId, setNewId] = useState("");
+    const [newList, setNewList] = useState("");
+    const [search, setSearch] = useState("");
+    const [count, setCount] = useState(0);
 
-    constructor(props) {
-        super(props);
+    const [shouldRender, setShowRender] = useState(true);
 
-        this.state = {
-            AddListName: ""
-        };
+    useEffect(() => {
+        setCurList("All")
 
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+        if (!firebase.apps.length) {
+            firebase.initializeApp(config);
+        }
 
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
+        let ref = firebase.database().ref('movies').orderByKey();
 
-        this.setState({
-            [name]: value
+        ref.on('child_removed', (childSnapshot, prevChildKey) => {
+            const deletedChild = childSnapshot.val();
+            setMovies(curMovies => curMovies.filter(m => m.imdbID != deletedChild.imdbID));
+            console.log(deletedChild.Title);
         });
+
+        ref.limitToFirst(8).once('value', (dataSnapshot) => {
+            const val = dataSnapshot.val();
+            if(val != null) {
+                setMovies(Object.values(val));
+                console.log(val);
+            }
+        });
+
+        
+
+        let listRef = firebase.database().ref('lists');
+
+        listRef.on('value', (dataSnapshot) => {
+            const val = dataSnapshot.val();
+            setLists(val);
+            if(val != null) {
+                setCount(Object.keys(val["All"]).length - 1);
+            }
+        });
+
+        let movieListsRef = firebase.database().ref('movieLists');
+
+        movieListsRef.on('value', (dataSnapshot) => {
+            const val = dataSnapshot.val();
+            setMovieLists(val);
+        });
+    }, [shouldRender])
+
+    const createList = (evt) => {
+        evt.preventDefault();
+
+        firebase.database().ref('lists').child(newList).set({
+            title: newList
+        });
+
+        setNewList("");
+        setPage(0);
+        setShowRender(cur => !cur);
+        alert("Success!");
     }
-    handleSubmit(event) {
-        event.preventDefault();
 
+    const getPage = () => {
+            return (
+                <form className="add-movie" onSubmit={createList}>
+                    <h2>Create List</h2>
+                        <label>
+                            Please enter the name of the list:
+                            <input type="text" value={newList} onChange={e => setNewList(e.target.value)}/>
+                        </label>
+                        <input type="submit" value="Submit" />
+                    </form>
+            );
+        }
 
-        let id = this.state.AddListName;
-        let ref = firebase.database().ref('List/' + id);
+    return getPage();
+    
 
-        ref.set({ id });
-        alert("Added List " + id + " to database");
-
-        this.setState({ AddListName: "" });
-
-    }
-
-
-    render() {
-        return (
-            <div className="inputForm">
-                <form onSubmit={this.handleSubmit}>
-                    <label>
-                        List to Add:
-                    <input
-                            name="AddListName"
-                            type="text"
-                            required="required"
-                            value={this.state.AddListName}
-                            onChange={this.handleInputChange} />
-                    </label>
-
-                    <input type="submit" value="Submit" />
-                </form>
-            </div>
-        );
-    }
 }
-export default AddList;
+
+export default Movies;
