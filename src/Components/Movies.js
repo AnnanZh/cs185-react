@@ -98,16 +98,16 @@ function Movies(props) {
         }
     }
     
-    const loadMore = () => {
-        let ref = firebase.database().ref('movies');
-        let curLen = movies.length;
-        for(var i = curLen + 1; i < Math.min(curLen + 9, Object.keys(lists[curList]).length); i++) {
-            ref.child(Object.keys(lists[curList])[i]).once('value', (dataSnapshot) => {
-                const val = dataSnapshot.val();
-                setMovies(cur => [...cur, val]);
-            });
-        }
-    }
+    // const loadMore = () => {
+    //     let ref = firebase.database().ref('movies');
+    //     let curLen = movies.length;
+    //     for(var i = curLen + 1; i < Math.min(curLen + 9, Object.keys(lists[curList]).length); i++) {
+    //         ref.child(Object.keys(lists[curList])[i]).once('value', (dataSnapshot) => {
+    //             const val = dataSnapshot.val();
+    //             setMovies(cur => [...cur, val]);
+    //         });
+    //     }
+    // }
 
     const getPage = () => {
             const movs = movies
@@ -155,9 +155,9 @@ function Movies(props) {
                         <input className="movie-search" type="text" placeholder="Search.." value={search} onChange={e => setSearch(e.target.value)}/>
                     </div>
                     <Grid items={movs}/>
-                    {lists != null && lists[curList] != null && count > movies.length && <button className="load-more" onClick={() => loadMore()}>
+                    {/* {lists != null && lists[curList] != null && count > movies.length && <button className="load-more" onClick={() => loadMore()}>
                         Load More
-                    </button>}
+                    </button>} */}
                 </div>
             );
     }
