@@ -73,7 +73,8 @@ function Movies(props) {
                     imdbRating: response.data.imdbRating,
                     Director: response.data.Director,
                     Released: response.data.Released,
-                    Plot: response.data.Plot
+                    Plot: response.data.Plot,
+                    Actors: response.data.Actors
                 });
                 firebase.database().ref('lists').child("All").child(response.data.imdbID).set(true);
                 firebase.database().ref('movieLists').child(response.data.imdbID).set({

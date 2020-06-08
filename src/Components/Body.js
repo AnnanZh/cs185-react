@@ -7,6 +7,7 @@ import Guestbook from './Guestbook'
 import Movies from './Movies'
 import AddMovie from './AddMovie'
 import AddList from './AddList'
+import Graph from './Graph'
 
 
 
@@ -15,20 +16,22 @@ export class Body extends Component{
 		var activeTab = this.props.activeTab
 		if(activeTab===1)
 			return <Home/>
-		else if (activeTab==2) 
+		else if (activeTab===2) 
 			return <Experience/>
-		else if (activeTab==3)
+		else if (activeTab===3)
 			return <Images/>
-		else if (activeTab==4)
+		else if (activeTab===4)
 			return <Videos/>
-		else if (activeTab==5)
+		else if (activeTab===5)
 			return <Guestbook/>
-		else if (activeTab==6)
+		else if (activeTab===6)
 			return <Movies/>
-		else if (activeTab==7)
+		else if (activeTab===7)
 			return <AddMovie/>
-		else
+		else if (activeTab===8)
 			return <AddList/>
+		else
+			return <Graph/>
 	}
     render(){
 
